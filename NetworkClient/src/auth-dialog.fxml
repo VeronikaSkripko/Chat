@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="220.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AuthDialogController">
+   <children>
+      <Label layoutX="31.0" layoutY="48.0" prefHeight="36.0" prefWidth="99.0" text="Login:">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="31.0" layoutY="105.0" prefHeight="27.0" prefWidth="125.0" text="Password:">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <TextField fx:id="loginField" layoutX="163.0" layoutY="53.0" onAction="#checkAuth" prefHeight="26.0" prefWidth="171.0" />
+      <PasswordField fx:id="passField" layoutX="163.0" layoutY="105.0" onAction="#checkAuth" />
+      <Button layoutX="124.0" layoutY="159.0" mnemonicParsing="false" onAction="#checkAuth" prefHeight="36.0" prefWidth="99.0" text="Button">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
