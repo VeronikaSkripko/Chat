@@ -34,7 +34,6 @@ public class User {
 				", username='" + username + '\'' +
 				'}';
 	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -44,7 +43,6 @@ public class User {
 				Objects.equals(password, user.password) &&
 				Objects.equals(username, user.username);
 	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(login, password, username);

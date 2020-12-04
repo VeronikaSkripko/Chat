@@ -8,9 +8,9 @@ public class BaseAuthService implements AuthService {
 
 	//список всех польз-ей
 	private static final List<User> clients = List.of(
-			new User("user1", "1111", "Борис"),
-			new User("user2", "2222", "Тимофей"),
-			new User("user3", "3333", "Мартин")
+			new User("user1", "1111", "Борис_Николаевич"),
+			new User("user2", "2222", "Гендальф_Серый"),
+			new User("user3", "3333", "Мартин_Некотов")
 	);
 	//проверка на соответсвие нового польз-ля списку польз-лям
 	public String getUsernameByLoginAndPassword(String login, String password){
@@ -21,5 +21,4 @@ public class BaseAuthService implements AuthService {
 		}
 		return null;
 	}
-
 }

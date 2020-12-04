@@ -1,13 +1,15 @@
 package chat;
 
+import chat.auth.AuthService;
+import chat.auth.BaseAuthService;
+import chat.handler.ClientHandler;
+import clientserver.Command;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-
-import chat.handler.*;
-import chat.auth.*;
 
 public class MyServer {
 	private final ServerSocket serverSocket;
@@ -35,7 +37,6 @@ public class MyServer {
 		} finally {
 			serverSocket.close();
 		}
-
 	}
 
 	private void waitAndProcessNewClientConnection() throws IOException {
@@ -62,7 +63,7 @@ public class MyServer {
 		return authService;
 	}
 
-	public boolean isUsernameBusy(String clientUsername) {
+	public synchronized boolean isUsernameBusy(String clientUsername) {
 		for (ClientHandler client : clients) {
 			//если пришедший клиент равен тому, который лежит в списке на сервере, то true
 			if(client.getClientUsername().equals(clientUsername)){
@@ -72,21 +73,43 @@ public class MyServer {
 		return false;
 	}
 
-	public void	subscribe(ClientHandler clientHandler){
+	public synchronized void subscribe(ClientHandler clientHandler) throws IOException{
 		clients.add(clientHandler);
-	}
-	public void unsubscribe(ClientHandler clientHandler){
-		clients.remove(clientHandler);
+		List<String> usernames = getAllUsernames();
+		broadcastMessage(null, Command.updateUsersListCommand(usernames));
 	}
 
-	public void broadcastMessage(String s, ClientHandler sender) throws IOException {
+	private List<String> getAllUsernames() {
+		List<String> usernames = new ArrayList<>();
+		for (ClientHandler client : clients) {
+			usernames.add(client.getClientUsername());
+		}
+		return usernames;
+	}
+
+	public synchronized void unSubscribe(ClientHandler clientHandler) throws IOException {
+		clients.remove(clientHandler);
+		List<String> usernames = getAllUsernames();
+		broadcastMessage(null, Command.updateUsersListCommand(usernames));
+	}
+
+	public synchronized void broadcastMessage(ClientHandler sender, Command command) throws IOException {
 		for (ClientHandler client : clients) {
 			//чтобы не отпраавлять сообщение о новом польз-ле самому новому польз-лю
 			if(client == sender){
 				continue;
 			}
 			//отправляем всем сообщение о новом пользователе
-			client.sendMessage(s, sender.getClientUsername());
+			client.sendMessage(command);
+		}
+	}
+
+	public synchronized void sendPrivateMessage(String recipient, Command command) throws IOException {
+		for (ClientHandler client : clients) {
+			if (client.getClientUsername().equals(recipient)) {
+				client.sendMessage(command);
+				break;
+			}
 		}
 	}
 }
